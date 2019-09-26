@@ -6,3 +6,13 @@ output: html_document
 ---
 
 
+# Part 1
+1.
+```{r}
+happy <- readRDS("HAPPY.rds")
+happy[happy=="IAP"]=NA
+happy[happy=="DK"]=NA
+happy[happy=="NA"]=NA
+```
+
+2.
