@@ -18,15 +18,20 @@ happy[happy=="NA"]=NA
 ```
 
 2.
-Now, we'll set each factor to a data type rather than the default "factor", ensuring the elements of each column are a type we can work with.
+Now, we'll cast our variables to the proper data type like factor for categorical variables, a numerical type for numbers, etc.
 ```{r}
-happy$age = as.numeric(happy$age)
-happy$happy = as.character(happy$happy)
-happy$marital = as.character(happy$marital)
-happy$sex = as.character(happy$sex)
-happy$finrela = as.character(happy$finrela)
-happy$degree = as.character(happy$degree)
-happy$health = as.character(happy$health)
-happy$polviews = as.character(happy$polviews)
-happy$partyid = as.character(happy$partyid)
+# first some simple ones, chars turned to factors
+happy$HAPPY = as.factor(happy$HAPPY)
+happy$SEX = as.factor(happy$SEX)
+happy$MARITAL = as.factor(happy$MARITAL)
+happy$DEGREE = as.factor(happy$DEGREE)
+happy$FINRELA = as.factor(happy$FINRELA)
+happy$HEALTH = as.factor(happy$HEALTH)
+happy$PARTYID = as.factor(happy$PARTYID)
+happy$POLVIEWS = as.factor(happy$POLVIEWS)
+
+# now age needs to be set to numerical
+happy$AGE[happy$AGE=="89 OR OLDER"]="89"
+happy$AGE = as.integer(happy$AGE)
+str(happy)
 ```
