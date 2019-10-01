@@ -7,7 +7,9 @@ output: html_document
 
 
 # Part 1
+We will do some simple cleaning on the happy dataframe before we do an analysis.
 1.
+All missing values should be set to NA, including IAP, DK, and NA as a character type.
 ```{r}
 happy <- readRDS("HAPPY.rds")
 happy[happy=="IAP"]=NA
@@ -16,3 +18,15 @@ happy[happy=="NA"]=NA
 ```
 
 2.
+Now, we'll set each factor to a data type rather than the default "factor", ensuring the elements of each column are a type we can work with.
+```{r}
+happy$age = as.numeric(happy$age)
+happy$happy = as.character(happy$happy)
+happy$marital = as.character(happy$marital)
+happy$sex = as.character(happy$sex)
+happy$finrela = as.character(happy$finrela)
+happy$degree = as.character(happy$degree)
+happy$health = as.character(happy$health)
+happy$polviews = as.character(happy$polviews)
+happy$partyid = as.character(happy$partyid)
+```
