@@ -5,14 +5,14 @@ date: "9/26/2019"
 output: html_document
 ---
 
-
-# Part 1
-1.
 ```{r}
-happy <- readRDS("HAPPY.rds")
-happy[happy=="IAP"]=NA
-happy[happy=="DK"]=NA
-happy[happy=="NA"]=NA
+happy = readRDS("HAPPY.rds")
+
+names(happy) = tolower(names(happy))
 ```
 
-2.
+1.
+```{r}
+tail(happy)
+happy[happy=="IAP"]=="NA"
+```
