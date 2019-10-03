@@ -5,14 +5,44 @@ date: "9/26/2019"
 output: html_document
 ---
 
-```{r}
-happy = readRDS("HAPPY.rds")
 
-names(happy) = tolower(names(happy))
+# Part 1
+We will do some simple cleaning on the happy dataframe before we do an analysis.
+1.
+All missing values should be set to NA, including IAP, DK, and NA as a character type.
+```{r}
+happy <- readRDS("HAPPY.rds")
+happy[happy=="IAP"]=NA
+happy[happy=="DK"]=NA
+happy[happy=="NA"]=NA
 ```
 
-1.
+2.
+Now, we'll cast our variables to the proper data type like factor for categorical variables, a numerical type for numbers, etc.
 ```{r}
-tail(happy)
-happy[happy=="IAP"]=="NA"
+# first some simple ones, chars turned to factors
+happy$HAPPY = as.factor(happy$HAPPY)
+happy$SEX = as.factor(happy$SEX)
+happy$MARITAL = as.factor(happy$MARITAL)
+happy$DEGREE = as.factor(happy$DEGREE)
+happy$FINRELA = as.factor(happy$FINRELA)
+happy$HEALTH = as.factor(happy$HEALTH)
+happy$PARTYID = as.factor(happy$PARTYID)
+happy$POLVIEWS = as.factor(happy$POLVIEWS)
+# now age needs to be set to numerical
+happy$AGE[happy$AGE=="89 OR OLDER"]="89"
+happy$AGE = as.integer(happy$AGE)
+str(happy)
+```
+
+3.
+Now we'll reorder all of the factor levels. 
+```{r}
+# We will (arbitrarily) order by average age, just so factor levels aren't unordered.
+happy$HAPPY = reorder(happy$HAPPY, happy$AGE, mean)
+happy$SEX = reorder(happy$SEX, happy$AGE, mean)
+happy$MARITAL = reorder(happy$MARITAL, happy$AGE, mean)
+happy$HEALTH = reorder(happy$HEALTH, happy$AGE, mean)
+happy$PARTYID = reorder(happy$PARTYID, happy$AGE, mean)
+happy$POLVIEWS = reorder(happy$POLVIEWS, happy$AGE, mean)
 ```
