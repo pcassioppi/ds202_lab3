@@ -46,3 +46,47 @@ happy$HEALTH = reorder(happy$HEALTH, happy$AGE, mean)
 happy$PARTYID = reorder(happy$PARTYID, happy$AGE, mean)
 happy$POLVIEWS = reorder(happy$POLVIEWS, happy$AGE, mean)
 ```
+
+# Part 2
+1.
+```{r}
+library(ggplot2)
+ggplot(happy, aes(YEAR))+geom_histogram(bins = length(unique(happy$YEAR)), color='Black', fill='Dark Red')+labs(title="Histogram of Years in Data",x = "Year",y = "Count")
+```
+
+From this histogram we can gather some key information about our data. We can tell what years the survey was given out and what years it wasn't. We can also tell that the year 2005 had the most responses out of any of the years. This information can be useful to us as it lets us know if there are any times that responses may have been affected by something happening in the world that year. For example, if there was a recession during a time, or some other disaster. If we knew from the dataset where the responders to the survey were from, maybe this would be more valuable. This graph also immediately tells us the range of years the survey was given out, from 1972-2016.
+
+```{r}
+ggplot(happy, aes(SEX, AGE))+geom_boxplot(color='Black', fill='Purple', size=1.25)+labs(title="Boxplot of Age by Sex",x = "Sex",y = "Age")
+```
+```{r}
+ggplot(happy, aes(SEX, AGE))+geom_violin(color='Black', fill='Light Green', size=1.25, trim=FALSE)+labs(title="Violin Chart of Age by Sex",x = "Sex",y = "Age")
+```
+
+In order to find the distribution of ages for each sex, we made a boxplot and violin plot for both genders. From these plots we can see that the ages for the survey were pretty close in distribution for each sex. One thing we can see is that the male data seems to be younger than the female data, because the whole male box in the boxplot is lower than the box for females. The median of the age for men is slightly lower than the females who responded to the survey, and so are the first and third quartiles. But, overall we can say that the median age for both sexes seems to be around 44 or 45, and the interquartile range is about 31-60. The violin chart shows us that the survey was very heavily influnced by younger peope, as there is a large bottom section of the chart around age 30. 
+
+2.
+```{r}
+#initially there was an NA facet for people who didn't respond to the question, here I remove those values
+index = which(is.na(happy$HAPPY))
+happy2 = happy[-index,]
+
+
+ggplot(happy2, aes(AGE))+geom_histogram(bins = length(unique(happy2$AGE)), color='Black', fill='Dark Blue')+facet_wrap(~HAPPY)+labs(title="Histogram of Count of Happiness by Age",x = "Age (Years)",y = "Count")
+```
+
+In this histogram, we can right away see that most people responded to the question with the answer Pretty Happy. This may be because it is the choice in the middle of the three choices, which would make it a likely choice for a lot of people to pick. We do see a spike up at the end of the ages for each graph, but that is only because the maximum age available to enter in the survey was 89, so that is the cause of the spike. One thing of note we can learn from these graphs is that while all the charts are right skewed, the not too happy graph is less skewed than the others. This tells us that younger people were less likely to answer not too happy than the other graphs. There also seems to be a gap where one of the ages had no responses to the questions, somewhere around 35.
+
+
+```{r}
+
+ggplot(happy2, aes(FINRELA, fill=HAPPY))+geom_bar(position='fill')+labs(title="Bar Chart of Count of Happiness by Financial Status",x = "Financial Status",y = "Normalized Count")+ theme(axis.text.y = element_text(angle = 45))+coord_flip()+ scale_fill_brewer(palette="Set1")
+```
+
+In this bar chart, we can see that, of the people surveyed, there is a relationship between financial situation and happiness. The responders with a Far Above Average situation have about the first or second highest Very Happy responses, as it is very close with the Above Average situation. From this graph, we can also see that the Not Too Happy responses for the Below Average and Far Below Average responses are the two highest for any of the groups, This tells us that people who are better off financially (or say that they are) are more happy than people in a worse financial state. One other interesting thing this graph tells us, is that people who didn't know, or didn't want to disclose, their financial situation and responded NA seem less happy than the people whose situation is Average.
+
+```{r}
+ggplot(happy2, aes(DEGREE, fill=HAPPY))+geom_bar(position="fill")+theme(axis.text.y = element_text(angle = 45))+coord_flip()+ scale_fill_brewer(palette="Dark2")+labs(title="Bar Chart of Count of Happiness by Degree Earned",x = "Degree Earned",y = "Normalized Count")
+```
+
+From this barchart that is similar to the previous one, we can see that of the people that responded, the ones who went to college and graduate school are on average happier than the other groups. We can see that the less educated members of the survey seemed to be less happy, and each level of education seems to make them happier. We can say this because we can see a slight increase in the Very Happy column as we go from Left High School through Junior College, and a larger jump when we get to Bachlors Degrees and Graduate Degrees. These trends continue in the inverse on the Not Too Happy side of the graph, with less and less responders saying they are unhappy the more education they have.
