@@ -405,6 +405,16 @@ str(happy)</code></pre>
 ##  $ WTSSALL : num  0.445 0.889 0.889 0.889 0.889 ...
 ##  $ PARTYID : Factor w/ 8 levels &quot;IND,NEAR DEM&quot;,..: 1 4 3 4 7 1 1 1 7 7 ...
 ##  $ POLVIEWS: Factor w/ 7 levels &quot;CONSERVATIVE&quot;,..: NA NA NA NA NA NA NA NA NA NA ...</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Now we’ll reorder all of the factor levels.</li>
+</ol>
+<pre class="r"><code># We will (arbitrarily) order by average age, just so factor levels aren&#39;t unordered.
+happy$HAPPY = reorder(happy$HAPPY, happy$AGE, mean)
+happy$SEX = reorder(happy$SEX, happy$AGE, mean)
+happy$MARITAL = reorder(happy$MARITAL, happy$AGE, mean)
+happy$HEALTH = reorder(happy$HEALTH, happy$AGE, mean)
+happy$PARTYID = reorder(happy$PARTYID, happy$AGE, mean)
+happy$POLVIEWS = reorder(happy$POLVIEWS, happy$AGE, mean)</code></pre>
 </div>
 
 

@@ -35,3 +35,16 @@ happy$AGE[happy$AGE=="89 OR OLDER"]="89"
 happy$AGE = as.integer(happy$AGE)
 str(happy)
 ```
+
+3.
+Now we'll reorder all of the factor levels. 
+```{r}
+# We will (arbitrarily) order by average age, just so factor levels aren't unordered.
+happy$HAPPY = reorder(happy$HAPPY, happy$AGE, mean)
+happy$SEX = reorder(happy$SEX, happy$AGE, mean)
+happy$MARITAL = reorder(happy$MARITAL, happy$AGE, mean)
+happy$HEALTH = reorder(happy$HEALTH, happy$AGE, mean)
+happy$PARTYID = reorder(happy$PARTYID, happy$AGE, mean)
+happy$POLVIEWS = reorder(happy$POLVIEWS, happy$AGE, mean)
+
+```
