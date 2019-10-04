@@ -5,20 +5,18 @@ date: "9/26/2019"
 output: html_document
 ---
 
+Owner's GitHub: pcassioppi
+Partner's GitHub: spencerqbrown
+Repo Name: ds202_lab3
 
-# Part 1
-We will do some simple cleaning on the happy dataframe before we do an analysis.
-1.
-All missing values should be set to NA, including IAP, DK, and NA as a character type.
+We have a dataset of self-reported happiness levels along with some other bits of information about the self-reporters. We will do some simple cleaning on this 'happy' dataframe before we do an analysis. It seems as though there are several possible values that represent missing values. All missing values should be set to NA, including IAP, DK, and NA as a character type. 
 ```{r}
 happy <- readRDS("HAPPY.rds")
 happy[happy=="IAP"]=NA
 happy[happy=="DK"]=NA
 happy[happy=="NA"]=NA
 ```
-
-2.
-Now, we'll cast our variables to the proper data type like factor for categorical variables, a numerical type for numbers, etc.
+This way, we won't have any issues with IAP and such being considered separate categories from NA, or not showing as NA when we need to be aware of missing values. Now, we'll cast our variables to the proper data type like factor for categorical variables, a numerical type for numbers, etc.
 ```{r}
 # first some simple ones, chars turned to factors
 happy$HAPPY = as.factor(happy$HAPPY)
@@ -34,21 +32,25 @@ happy$AGE[happy$AGE=="89 OR OLDER"]="89"
 happy$AGE = as.integer(happy$AGE)
 str(happy)
 ```
-
-3.
-Now we'll reorder all of the factor levels. 
+Now that all of our columns are of the desired type, we only have a bit more cleaning to do before exploring the data.
+We'll just reorder some of the factor levels so they aren't functionally random.
 ```{r}
-# We will (arbitrarily) order by average age, just so factor levels aren't unordered.
-happy$HAPPY = reorder(happy$HAPPY, happy$AGE, mean)
+# HAPPY is ordered reasonably, going from least to most happy, so it will stay the same
+# SEX, MARITAL, PARTYID, are nominal, so we'll just arbitrarily order them using mean AGE
 happy$SEX = reorder(happy$SEX, happy$AGE, mean)
 happy$MARITAL = reorder(happy$MARITAL, happy$AGE, mean)
-happy$HEALTH = reorder(happy$HEALTH, happy$AGE, mean)
 happy$PARTYID = reorder(happy$PARTYID, happy$AGE, mean)
-happy$POLVIEWS = reorder(happy$POLVIEWS, happy$AGE, mean)
+# We'll reorder HEALTH so it goes from least to most healthy
+library(forcats)
+happy$HEALTH = fct_rev(happy$HEALTH)
+# We'll order POLVIEWS from most conservative to most liberal, manually
+happy$POLVIEWS = fct_relevel(happy$POLVIEWS, "EXTRMLY CONSERVATIVE", "CONSERVATIVE", "SLGHTLY CONSERVATIVE", "MODERATE", "SLIGHTLY LIBERAL", "LIBERAL", "EXTREMELY LIBERAL")
+# Same sort of deal with DEGREE and FINRELA
+happy$DEGREE = fct_relevel(happy$DEGREE, "LT HIGH SCHOOL", "HIGH SCHOOL", "JUNIOR COLLEGE", "BACHELOR", "GRADUATE")
+happy$FINRELA = fct_relevel(happy$FINRELA, "FAR BELOW AVERAGE", "BELOW AVERAGE", "AVERAGE", "ABOVE AVERAGE", "FAR ABOVE AVERAGE")
 ```
 
-# Part 2
-1.
+Now that our data frame is in our desired format, we can move onto some exploratory data analysis. We'll start with some simple distributions before moving onto how variables relate to each other.
 ```{r}
 library(ggplot2)
 ggplot(happy, aes(YEAR))+geom_histogram(bins = length(unique(happy$YEAR)), color='Black', fill='Dark Red')+labs(title="Histogram of Years in Data",x = "Year",y = "Count")
@@ -65,7 +67,7 @@ ggplot(happy, aes(SEX, AGE))+geom_violin(color='Black', fill='Light Green', size
 
 In order to find the distribution of ages for each sex, we made a boxplot and violin plot for both genders. From these plots we can see that the ages for the survey were pretty close in distribution for each sex. One thing we can see is that the male data seems to be younger than the female data, because the whole male box in the boxplot is lower than the box for females. The median of the age for men is slightly lower than the females who responded to the survey, and so are the first and third quartiles. But, overall we can say that the median age for both sexes seems to be around 44 or 45, and the interquartile range is about 31-60. The violin chart shows us that the survey was very heavily influnced by younger peope, as there is a large bottom section of the chart around age 30. 
 
-2.
+Now that we have a bit of info on how a few variables are distributed, we can see how they relate to each other.
 ```{r}
 #initially there was an NA facet for people who didn't respond to the question, here I remove those values
 index = which(is.na(happy$HAPPY))
@@ -90,3 +92,5 @@ ggplot(happy2, aes(DEGREE, fill=HAPPY))+geom_bar(position="fill")+theme(axis.tex
 ```
 
 From this barchart that is similar to the previous one, we can see that of the people that responded, the ones who went to college and graduate school are on average happier than the other groups. We can see that the less educated members of the survey seemed to be less happy, and each level of education seems to make them happier. We can say this because we can see a slight increase in the Very Happy column as we go from Left High School through Junior College, and a larger jump when we get to Bachlors Degrees and Graduate Degrees. These trends continue in the inverse on the Not Too Happy side of the graph, with less and less responders saying they are unhappy the more education they have.
+
+We were able to unpack quite a bit of information from this data. In summary, we were able to ascertain the year range of surveys 1972-2016 with a spike in surveys in 2005, as well as see that survey takers were generally in the younger end of the age range, with both sexes being generally equal despite a small tendency for male survey takers to be younger than female survey takers. We learned that most survey takers considered themselves 'PRETTY HAPPY', indicated by the much taller histogram (with count) of age for that category. From that same set of plots, we could see that younger people were more likely to be 'NOT TOO HAPPY'. When looking at the relationship between financial status and happiness, we could see that, in general, happiness increases with self-reported financial status, and those unwilling to report that status were less happy than those of average financial status. Similarly, we can see that a higher degree earned correlates with increased happiness, and nonreporting survey takers are less happy than everyone except those with a highest degree of 'LT HIGH SCHOOL'. 
